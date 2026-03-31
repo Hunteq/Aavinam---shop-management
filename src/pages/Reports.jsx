@@ -116,12 +116,21 @@ const ShareModal = ({ isOpen, onClose, reportData, dateRange, customRange, displ
     
     // For web, we can't truly "attach" a PDF to WhatsApp/SMS link
     // But we can generate it, download it, and provide a link to the shop or a message
-    const reportText = `*Dairy Shop Report (${displayDateRange})*%0A%0A` +
-      `Total Revenue: ₹${reportData.financials.revenue.toLocaleString()}%0A` +
-      `Total Expenses: ₹${reportData.financials.expenses.toLocaleString()}%0A` +
-      `*Net Profit: ₹${reportData.financials.profit.toLocaleString()}*%0A%0A` +
-      `Top Product: ${reportData.products[0]?.name || 'N/A'}%0A%0A` +
-      `_Sent via Dairy Shop Management System_`;
+    const separator = '--------------------------------';
+    const reportText = [
+      `*🏪 DAIRY SHOP REPORT*`,
+      `📅 *${displayDateRange}*`,
+      separator,
+      `▫️ *${t('revenue')}:* ₹${reportData.financials.revenue.toLocaleString()}`,
+      `▫️ *${t('total_expenses')}:* ₹${reportData.financials.expenses.toLocaleString()}`,
+      separator,
+      `✅ *${t('net_profit').toUpperCase()}: ₹${reportData.financials.profit.toLocaleString()}*`,
+      separator,
+      `📊 *${t('category_distribution')}:*`,
+      ...reportData.categories.map(c => `• ${c.name}: ₹${c.value.toLocaleString()}`),
+      separator,
+      `_Sent via DSMS Analytics_`
+    ].join('%0A');
 
     if (type === 'whatsapp') {
       window.open(`https://wa.me/91${targetMobile}?text=${reportText}`, '_blank');
