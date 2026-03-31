@@ -738,7 +738,8 @@ const Reports = () => {
         @media (max-width: 1024px) {
           .reports-page-header {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
+            text-align: center;
           }
           
           .reports-actions {
@@ -756,7 +757,9 @@ const Reports = () => {
 
         @media (max-width: 640px) {
           .header-info p {
-            display: none;
+            display: block;
+            font-size: 0.75rem;
+            margin-top: 2px;
           }
           
           .reports-page-header h2 {

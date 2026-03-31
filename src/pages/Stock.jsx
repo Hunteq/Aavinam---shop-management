@@ -179,24 +179,32 @@ const Stock = () => {
 
   return (
     <div className="grid gap-6">
-      <div className="stock-page-header flex flex-wrap justify-between items-center gap-4">
-        <div>
+      <div className="stock-page-header">
+        <div className="header-info">
           <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>{t('stock_control_system')}</h2>
           <p className="text-sm text-muted">{t('track_refrigeration')}</p>
         </div>
-        <div className="flex gap-2">
-          <button className="btn-primary flex items-center gap-2"
-            style={{ background: '#10b981' }}
-            onClick={() => { setModalType('OPENING'); setShowModal(true); }}>
-            <Package size={18} /> {t('opening_stock')}
+        <div className="stock-actions">
+          <button
+            className="stock-action-btn stock-opening-btn"
+            onClick={() => { setModalType('OPENING'); setShowModal(true); }}
+          >
+            <Package size={18} />
+            <span>{t('opening_stock')}</span>
           </button>
-          <button className="btn-primary flex items-center gap-2" onClick={() => { setModalType('FRESH'); setShowModal(true); }}>
-            <PlusCircle size={18} /> {t('fresh_stock')}
+          <button
+            className="stock-action-btn stock-fresh-btn"
+            onClick={() => { setModalType('FRESH'); setShowModal(true); }}
+          >
+            <PlusCircle size={18} />
+            <span>{t('fresh_stock')}</span>
           </button>
-          <button className="btn-primary flex items-center gap-2"
-            style={{ background: '#3b82f6' }}
-            onClick={() => { setModalType('SALE'); setShowModal(true); }}>
-            <ShoppingCart size={18} /> {t('record_sale')}
+          <button
+            className="stock-action-btn stock-sale-btn"
+            onClick={() => { setModalType('SALE'); setShowModal(true); }}
+          >
+            <ShoppingCart size={18} />
+            <span>{t('record_sale')}</span>
           </button>
         </div>
       </div>
@@ -529,8 +537,132 @@ const Stock = () => {
       )}
 
       <style>{`
+        /* ── Stock Page Header ── */
+        .stock-page-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 8px;
+        }
+
+        .stock-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .stock-action-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 18px;
+          border-radius: 12px;
+          font-weight: 700;
+          font-size: 0.875rem;
+          border: none;
+          color: white;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          white-space: nowrap;
+        }
+
+        .stock-opening-btn {
+          background: #10b981;
+        }
+        .stock-opening-btn:hover {
+          background: #059669;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 15px -3px rgba(16, 185, 129, 0.3);
+        }
+
+        .stock-fresh-btn {
+          background: var(--primary);
+        }
+        .stock-fresh-btn:hover {
+          background: var(--primary-hover);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        .stock-sale-btn {
+          background: #3b82f6;
+        }
+        .stock-sale-btn:hover {
+          background: #2563eb;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+
+        /* ── Responsive: Tablet ── */
         @media (max-width: 1024px) {
+          .stock-page-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+          }
+
+          .stock-actions {
+            width: 100%;
+            flex-wrap: wrap;
+          }
+
+          .stock-action-btn {
+            flex: 1;
+            justify-content: center;
+            padding: 12px 14px;
+            font-size: 0.8125rem;
+          }
+
           .lg-grid { grid-template-columns: 1fr !important; }
+        }
+
+        /* ── Responsive: Mobile ── */
+        @media (max-width: 640px) {
+          .stock-page-header .header-info p.text-muted {
+            display: block;
+            font-size: 0.75rem;
+            margin-top: 2px;
+          }
+
+          .stock-page-header h2 {
+            font-size: 1.25rem !important;
+          }
+
+          .stock-actions {
+            gap: 8px;
+          }
+
+          .stock-action-btn {
+            padding: 10px 8px;
+            gap: 6px;
+          }
+
+          .stock-action-btn span {
+            font-size: 0.75rem;
+          }
+        }
+
+        /* ── Responsive: Small Mobile ── */
+        @media (max-width: 480px) {
+          .stock-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+          }
+
+          .stock-opening-btn {
+            grid-column: span 2;
+          }
+
+          .stock-action-btn {
+            justify-content: center;
+            padding: 11px 10px;
+          }
+
+          .stock-action-btn span {
+            font-size: 0.72rem;
+          }
         }
         .checkpoint-card {
           min-width: 160px; 

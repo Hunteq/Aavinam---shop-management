@@ -172,17 +172,25 @@ const Financials = () => {
 
   return (
     <div className="grid gap-6">
-      <div className="financials-header flex justify-between items-center gap-3">
-        <div>
+      <div className="financials-header">
+        <div className="header-info">
           <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>{t('financial_control')}</h2>
           <p className="text-sm text-muted">{t('financial_subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowExpenseModal(true)} className="btn-secondary flex items-center gap-2" style={{ background: 'var(--bg-card)' }}>
-            <TrendingDown size={18} /> <span>{t('record_expense')}</span>
+        <div className="financials-actions">
+          <button
+            onClick={() => setShowExpenseModal(true)}
+            className="fin-action-btn fin-expense-btn"
+          >
+            <TrendingDown size={18} />
+            <span>{t('record_expense')}</span>
           </button>
-          <button onClick={() => setShowCashModal(true)} className="btn-primary flex items-center gap-2">
-            <IndianRupee size={18} /> <span>{t('daily_cash_count')}</span>
+          <button
+            onClick={() => setShowCashModal(true)}
+            className="fin-action-btn fin-cash-btn"
+          >
+            <IndianRupee size={18} />
+            <span>{t('daily_cash_count')}</span>
           </button>
         </div>
       </div>
@@ -465,9 +473,132 @@ const Financials = () => {
       )}
 
       <style>{`
+        /* ── Financials Page Header ── */
+        .financials-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 8px;
+        }
+
+        .financials-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .fin-action-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 18px;
+          border-radius: 12px;
+          font-weight: 700;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          white-space: nowrap;
+        }
+
+        .fin-expense-btn {
+          background: var(--bg-card);
+          color: var(--text-main);
+          border: 1px solid var(--border);
+        }
+        .fin-expense-btn:hover {
+          background: var(--bg-main);
+          border-color: var(--text-muted);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 14px -3px rgba(0,0,0,0.08);
+        }
+
+        .fin-cash-btn {
+          background: var(--primary);
+          color: white;
+          border: none;
+        }
+        .fin-cash-btn:hover {
+          background: var(--primary-hover);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 15px -3px rgba(37, 99, 235, 0.25);
+        }
+
+        /* ── Responsive: Tablet ── */
         @media (max-width: 1024px) {
+          .financials-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+          }
+
+          .financials-actions {
+            width: 100%;
+            flex-wrap: wrap;
+          }
+
+          .fin-action-btn {
+            flex: 1;
+            justify-content: center;
+            padding: 12px 14px;
+            font-size: 0.8125rem;
+          }
+
           .lg-grid { grid-template-columns: 1fr !important; }
         }
+
+        /* ── Responsive: Mobile ── */
+        @media (max-width: 640px) {
+          .financials-header .header-info p.text-muted {
+            display: block;
+            font-size: 0.75rem;
+            margin-top: 2px;
+          }
+
+          .financials-header h2 {
+            font-size: 1.25rem !important;
+          }
+
+          .financials-actions {
+            gap: 8px;
+          }
+
+          .fin-action-btn {
+            padding: 10px 8px;
+            gap: 6px;
+          }
+
+          .fin-action-btn span {
+            font-size: 0.75rem;
+          }
+        }
+
+        /* ── Responsive: Small Mobile ── */
+        @media (max-width: 480px) {
+          .financials-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+          }
+
+          .fin-cash-btn {
+            grid-column: span 2;
+          }
+
+          .fin-action-btn {
+            justify-content: center;
+            padding: 11px 10px;
+          }
+
+          .fin-action-btn span {
+            font-size: 0.72rem;
+          }
+
+          .delete-confirm-card {
+            padding: 20px 16px !important;
+          }
+        }
+
         .stats-card {
           padding: 24px;
           display: flex;
@@ -485,12 +616,6 @@ const Financials = () => {
         .modal-btn-row > button {
           flex: 1 1 0%;
           min-width: 0;
-        }
-
-        @media (max-width: 480px) {
-          .delete-confirm-card {
-            padding: 20px 16px !important;
-          }
         }
       `}</style>
     </div>
