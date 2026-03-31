@@ -51,7 +51,9 @@ const generateReportPDF = (reportData, dateRange, language) => {
   
   doc.setFontSize(10);
   doc.setTextColor(100);
-  doc.text(`Generated on: ${format(new Date(), 'PPpp', { locale: language === 'Tamil' ? ta : language === 'Hindi' ? hi : enUS })}`, 14, 30);
+  // Use a standard format that doesn't include non-Latin characters to prevent PDF corruption
+  const timestamp = format(new Date(), 'dd-MMM-yyyy, hh:mm:ss a');
+  doc.text(`Generated on: ${timestamp}`, 14, 30);
   doc.text(`Period: ${dateRange}`, 14, 35);
   
   // Summary Box
@@ -90,7 +92,7 @@ const generateReportPDF = (reportData, dateRange, language) => {
   return doc;
 };
 
-const ShareModal = ({ isOpen, onClose, reportData, dateRange }) => {
+const ShareModal = ({ isOpen, onClose, reportData, dateRange, customRange, displayDateRange }) => {
   const { t, language } = useAuth();
   const [mobileNumber, setMobileNumber] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -114,7 +116,7 @@ const ShareModal = ({ isOpen, onClose, reportData, dateRange }) => {
     
     // For web, we can't truly "attach" a PDF to WhatsApp/SMS link
     // But we can generate it, download it, and provide a link to the shop or a message
-    const reportText = `*Dairy Shop Report (${dateRange})*%0A%0A` +
+    const reportText = `*Dairy Shop Report (${displayDateRange})*%0A%0A` +
       `Total Revenue: ₹${reportData.financials.revenue.toLocaleString()}%0A` +
       `Total Expenses: ₹${reportData.financials.expenses.toLocaleString()}%0A` +
       `*Net Profit: ₹${reportData.financials.profit.toLocaleString()}*%0A%0A` +
@@ -128,8 +130,8 @@ const ShareModal = ({ isOpen, onClose, reportData, dateRange }) => {
     }
     
     // Also trigger the PDF download since we can't send it via URL
-    const doc = generateReportPDF(reportData, dateRange, language);
-    doc.save(`DairyReport_${format(new Date(), 'yyyyMMdd', { locale: language === 'Tamil' ? ta : language === 'Hindi' ? hi : enUS })}.pdf`);
+    const doc = generateReportPDF(reportData, dateRange === 'Custom Range' ? `${customRange.start} to ${customRange.end}` : dateRange, language);
+    doc.save(`DairyReport_${format(new Date(), 'yyyyMMdd')}.pdf`);
     
     setIsGenerating(false);
     onClose();
@@ -151,7 +153,7 @@ const ShareModal = ({ isOpen, onClose, reportData, dateRange }) => {
                 <div className="flex justify-between items-end">
                     <div>
                         <div className="text-xl font-black text-primary">₹{reportData.financials.revenue.toLocaleString()}</div>
-                        <div className="text-[10px] font-medium text-muted">{t('total_sales')} ({dateRange})</div>
+                        <div className="text-[10px] font-medium text-muted">{t('total_sales')} ({displayDateRange})</div>
                     </div>
                     <div className="text-right">
                         <div className="text-xs font-bold text-green-600">{t('profit')}: ₹{reportData.financials.profit.toLocaleString()}</div>
@@ -208,8 +210,9 @@ const ShareModal = ({ isOpen, onClose, reportData, dateRange }) => {
 
             <button 
                 onClick={() => {
-                    const doc = generateReportPDF(reportData, dateRange, language);
-                    doc.save(`DairyReport_${format(new Date(), 'yyyyMMdd', { locale: language === 'Tamil' ? ta : language === 'Hindi' ? hi : enUS })}.pdf`);
+                    const pdfDateRange = dateRange === 'Custom Range' ? `${customRange.start} to ${customRange.end}` : dateRange;
+                    const doc = generateReportPDF(reportData, pdfDateRange, language);
+                    doc.save(`DairyReport_${format(new Date(), 'yyyyMMdd')}.pdf`);
                 }}
                 className="pdf-download-btn"
             >
@@ -385,8 +388,9 @@ const Reports = () => {
           
           <button 
             onClick={() => {
-              const doc = generateReportPDF(reportData, displayDateRange, language);
-              doc.save(`DairyReport_${format(new Date(), 'yyyyMMdd', { locale: language === 'Tamil' ? ta : language === 'Hindi' ? hi : enUS })}.pdf`);
+              const pdfDateRange = dateRange === 'Custom Range' ? `${customRange.start} to ${customRange.end}` : (dateRange || 'All Time');
+              const doc = generateReportPDF(reportData, pdfDateRange, language);
+              doc.save(`DairyReport_${format(new Date(), 'yyyyMMdd')}.pdf`);
             }} 
             className="report-pdf-btn"
           >
@@ -405,7 +409,9 @@ const Reports = () => {
         isOpen={isShareModalOpen} 
         onClose={() => setIsShareModalOpen(false)} 
         reportData={reportData} 
-        dateRange={displayDateRange}
+        dateRange={dateRange}
+        customRange={customRange}
+        displayDateRange={displayDateRange}
       />
 
       {/* Filters - Hidden on Print */}
