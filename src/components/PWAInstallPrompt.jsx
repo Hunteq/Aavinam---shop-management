@@ -13,17 +13,30 @@ const PWAInstallPrompt = () => {
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     setIsIOS(isIOSDevice);
 
-    // If iOS, we check if it's already in standalone mode
-    if (isIOSDevice) {
-      const isStandalone = window.navigator.standalone === true;
-      if (!isStandalone) {
-        // Check if user dismissed it recently (last 24 hours)
-        const dismissedAt = localStorage.getItem('pwa-prompt-dismissed');
-        if (!dismissedAt || Date.now() - parseInt(dismissedAt) > 24 * 60 * 60 * 1000) {
-          setTimeout(() => setIsVisible(true), 3000);
-        }
+    const checkInstallation = () => {
+      // For iOS
+      if (isIOSDevice) {
+        return window.navigator.standalone === true;
       }
-    }
+      // For others, if we have a deferredPrompt, it's not installed/ready to install
+      // If we don't have it yet, we might still be waiting for the event
+      // However, we can also check if the app is in standalone mode (installed)
+      return window.matchMedia('(display-mode: standalone)').matches;
+    };
+
+    // Initial check and show after 3 seconds if not installed
+    const timer = setTimeout(() => {
+      if (!checkInstallation()) {
+        setIsVisible(true);
+      }
+    }, 3000);
+
+    // Set up 30 second interval to show prompt even if dismissed
+    const interval = setInterval(() => {
+      if (!checkInstallation()) {
+        setIsVisible(true);
+      }
+    }, 30000);
 
     const handler = (e) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
@@ -32,17 +45,24 @@ const PWAInstallPrompt = () => {
       setDeferredPrompt(e);
       window.deferredPrompt = e;
       
-      // Check if user dismissed it recently
-      const dismissedAt = localStorage.getItem('pwa-prompt-dismissed');
-      if (!dismissedAt || Date.now() - parseInt(dismissedAt) > 24 * 60 * 60 * 1000) {
-        setTimeout(() => setIsVisible(true), 3000);
+      if (!checkInstallation()) {
+        setIsVisible(true);
       }
     };
 
+    const installedHandler = () => {
+      console.log('App installed successfully');
+      setIsVisible(false);
+    };
+
     window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', installedHandler);
 
     return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
       window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('appinstalled', installedHandler);
     };
   }, []);
 
@@ -68,7 +88,6 @@ const PWAInstallPrompt = () => {
 
   const handleDismiss = () => {
     setIsVisible(false);
-    localStorage.setItem('pwa-prompt-dismissed', Date.now().toString());
   };
 
   if (!isVisible) return null;
