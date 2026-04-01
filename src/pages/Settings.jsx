@@ -214,16 +214,18 @@ const Settings = () => {
             <div className="flex flex-col gap-6">
               {/* Time Slots */}
               <div className="card">
-                <div className="flex justify-between items-center mb-4 sm:mb-6">
-                  <div className="flex-1">
-                    <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }} className="flex items-center gap-2">
+                <div className="ops-card-header">
+                  <div className="ops-header-info">
+                    <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }} className="flex items-center justify-center gap-2">
                       <Clock size={18} className="text-primary" /> {t('operational_schedule')}
                     </h3>
-                    <p className="hidden sm:block text-xs text-muted mt-1">{t('staff_record_checkpoints')}</p>
+                    <p className="text-xs text-muted mt-1">{t('staff_record_checkpoints')}</p>
                   </div>
-                  <button onClick={handleAddTimeSlot} className="btn-secondary flex items-center gap-1.5" style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700 }}>
-                    <Plus size={14} /> {t('add_slot')}
-                  </button>
+                  <div className="ops-slot-actions">
+                    <button onClick={handleAddTimeSlot} className="btn-secondary ops-slot-btn flex items-center gap-1.5">
+                      <Plus size={14} /> {t('add_slot')}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid gap-4">
@@ -555,6 +557,52 @@ const Settings = () => {
 
         .settings-header {
           /* Handled in index.css */
+        }
+
+        /* ── Operational Schedule Card Header (always centered, like Financials) ── */
+        .ops-card-header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 12px;
+          margin-bottom: 1rem;
+        }
+
+        .ops-header-info {
+          width: 100%;
+          text-align: center;
+        }
+
+        .ops-slot-actions {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+
+        .ops-slot-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 10px 24px;
+          border-radius: 10px;
+          font-size: 0.875rem;
+          font-weight: 700;
+          white-space: nowrap;
+          width: 100%;
+          max-width: 240px;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 640px) {
+          .ops-slot-btn {
+            max-width: 100%;
+            padding: 10px 16px;
+            font-size: 0.8125rem;
+          }
         }
 
         .time-slot-card {
