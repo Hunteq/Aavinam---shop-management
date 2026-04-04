@@ -23,7 +23,7 @@ const DynamicBackground = () => {
           </svg>
         </div>
 
-        {/* Juice Bottles */}
+        {/* Juice & Featured Bottles (Rose, Badam, Pista, Butterscotch) */}
         <div className="particle bottle juice-bottle-1">
           <svg width="35" height="55" viewBox="0 0 40 60">
             <path d="M12 5h16v8l4 4v38H8V17l4-4V5z" fill="#fbbf24" opacity="0.2" stroke="#f59e0b" strokeWidth="1.5" />
@@ -31,14 +31,54 @@ const DynamicBackground = () => {
           </svg>
         </div>
 
-        {/* Milk Drops */}
-        {[...Array(5)].map((_, i) => (
-          <div key={`drop-${i}`} className={`particle drop drop-${i + 1}`}>
-            <svg width="20" height="25" viewBox="0 0 20 25">
-              <path d="M10 2C10 2 4 10 4 15C4 18.3 6.7 21 10 21C13.3 21 16 18.3 16 15C16 10 10 2 10 2Z" fill="white" stroke="#3b82f6" strokeWidth="1" />
-            </svg>
-          </div>
-        ))}
+        <div className="particle bottle rose-milk-bottle">
+          <svg width="35" height="55" viewBox="0 0 40 60">
+            <path d="M12 5h16v8l4 4v38H8V17l4-4V5z" fill="#f472b6" opacity="0.3" stroke="#db2777" strokeWidth="1.5" />
+            <path d="M8 25h24v20H8z" fill="#f472b6" opacity="0.5" />
+            <circle cx="20" cy="35" r="4" fill="white" opacity="0.4" />
+          </svg>
+        </div>
+
+        <div className="particle bottle badam-milk-bottle">
+          <svg width="35" height="55" viewBox="0 0 40 60">
+            <path d="M12 5h16v8l4 4v38H8V17l4-4V5z" fill="#fde68a" opacity="0.3" stroke="#d97706" strokeWidth="1.5" />
+            <path d="M8 25h24v20H8z" fill="#fbbf24" opacity="0.5" />
+            <path d="M18 30l4 8l-8 0z" fill="#92400e" opacity="0.4" />
+          </svg>
+        </div>
+
+        <div className="particle bottle pista-milk-bottle">
+          <svg width="35" height="55" viewBox="0 0 40 60">
+            <path d="M12 5h16v8l4 4v38H8V17l4-4V5z" fill="#a7f3d0" opacity="0.3" stroke="#059669" strokeWidth="1.5" />
+            <path d="M8 25h24v20H8z" fill="#34d399" opacity="0.5" />
+            <circle cx="20" cy="35" r="3" fill="#065f46" opacity="0.4" />
+          </svg>
+        </div>
+
+        <div className="particle bottle butterscotch-bottle">
+          <svg width="35" height="55" viewBox="0 0 40 60">
+            <path d="M12 5h16v8l4 4v38H8V17l4-4V5z" fill="#fef08a" opacity="0.3" stroke="#ca8a04" strokeWidth="1.5" />
+            <path d="M8 25h24v20H8z" fill="#eab308" opacity="0.5" />
+            <rect x="15" y="32" width="10" height="10" rx="2" fill="#854d0e" opacity="0.4" />
+          </svg>
+        </div>
+
+
+        {/* Themed Drops (Rose, Badam, Pista, Butterscotch) */}
+        {[...Array(8)].map((_, i) => {
+          const colors = ['#f472b6', '#fbbf24', '#34d399', '#eab308', 'white'];
+          const color = colors[i % colors.length];
+          const strokes = ['#db2777', '#d97706', '#059669', '#ca8a04', '#3b82f6'];
+          const stroke = strokes[i % strokes.length];
+          return (
+            <div key={`themed-drop-${i}`} className={`particle drop themed-drop-${i + 1}`}>
+              <svg width="18" height="23" viewBox="0 0 20 25">
+                <path d="M10 2C10 2 4 10 4 15C4 18.3 6.7 21 10 21C13.3 21 16 18.3 16 15C16 10 10 2 10 2Z" fill={color} stroke={stroke} strokeWidth="1" opacity="0.7" />
+              </svg>
+            </div>
+          );
+        })}
+
 
         {/* Fruit Slices */}
         <div className="particle fruit orange-slice">
@@ -91,9 +131,18 @@ const DynamicBackground = () => {
             <path d="M11 20c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3Z" opacity="0.3" fill="#22c55e" />
           </svg>
         </div>
+        {/* Sparkles/Glow Effects */}
+        {[...Array(10)].map((_, i) => (
+          <div key={`sparkle-${i}`} className={`particle sparkle sparkle-${i + 1}`}>
+            <svg width="15" height="15" viewBox="0 0 20 20">
+              <path d="M10 0L12 8L20 10L12 12L10 20L8 12L0 10L8 8Z" fill="white" opacity="0.8" />
+            </svg>
+          </div>
+        ))}
       </div>
 
       {/* Wave Section at the Bottom */}
+
       <div className="waves-container">
         <svg className="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
           <defs>
@@ -144,8 +193,9 @@ const DynamicBackground = () => {
           position: absolute;
           filter: blur(0.5px);
           opacity: 0;
-          animation: floatParticle 10s infinite ease-in-out;
+          animation: floatParticle 15s infinite ease-in-out;
         }
+
 
         @keyframes floatParticle {
           0% {
@@ -164,28 +214,61 @@ const DynamicBackground = () => {
           }
         }
 
-        /* Particle Variations */
-        .milk-bottle-1 { left: 10%; animation-duration: 25s; animation-delay: 0s; }
-        .milk-bottle-2 { left: 85%; animation-duration: 30s; animation-delay: 5s; }
-        .juice-bottle-1 { left: 45%; animation-duration: 28s; animation-delay: 12s; }
+        /* Particle Variations (Increased durations for slower movement) */
+        .milk-bottle-1 { left: 5%; animation-duration: 45s; animation-delay: 0s; }
+        .milk-bottle-2 { left: 95%; animation-duration: 50s; animation-delay: 5s; }
+        .juice-bottle-1 { left: 45%; animation-duration: 48s; animation-delay: 12s; }
+        .rose-milk-bottle { left: 25%; animation-duration: 60s; animation-delay: 18s; }
+        .badam-milk-bottle { left: 75%; animation-duration: 55s; animation-delay: 22s; }
+        .pista-milk-bottle { left: 15%; animation-duration: 65s; animation-delay: 28s; }
+        .butterscotch-bottle { left: 85%; animation-duration: 58s; animation-delay: 32s; }
         
-        .drop-1 { left: 20%; animation-duration: 18s; animation-delay: 2s; }
-        .drop-2 { left: 70%; animation-duration: 22s; animation-delay: 8s; }
-        .drop-3 { left: 40%; animation-duration: 20s; animation-delay: 15s; }
-        .drop-4 { left: 15%; animation-duration: 24s; animation-delay: 4s; }
-        .drop-5 { left: 90%; animation-duration: 19s; animation-delay: 1s; }
+        .themed-drop-1 { left: 10%; animation-duration: 38s; animation-delay: 2s; }
+        .themed-drop-2 { left: 60%; animation-duration: 42s; animation-delay: 8s; }
+        .themed-drop-3 { left: 30%; animation-duration: 40s; animation-delay: 15s; }
+        .themed-drop-4 { left: 20%; animation-duration: 44s; animation-delay: 4s; }
+        .themed-drop-5 { left: 80%; animation-duration: 39s; animation-delay: 1s; }
+        .themed-drop-6 { left: 50%; animation-duration: 52s; animation-delay: 10s; }
+        .themed-drop-7 { left: 70%; animation-duration: 48s; animation-delay: 25s; }
+        .themed-drop-8 { left: 40%; animation-duration: 55s; animation-delay: 35s; }
 
-        .bubble-1 { left: 5%; animation-duration: 15s; animation-delay: 0s; }
-        .bubble-2 { left: 35%; animation-duration: 12s; animation-delay: 6s; }
-        .bubble-3 { left: 65%; animation-duration: 14s; animation-delay: 3s; }
-        .bubble-4 { left: 55%; animation-duration: 16s; animation-delay: 9s; }
-        .bubble-5 { left: 95%; animation-duration: 13s; animation-delay: 11s; }
-        .bubble-6 { left: 25%; animation-duration: 17s; animation-delay: 5s; }
+        .bubble-1 { left: 3%; animation-duration: 35s; animation-delay: 0s; }
+        .bubble-2 { left: 33%; animation-duration: 32s; animation-delay: 6s; }
+        .bubble-3 { left: 63%; animation-duration: 34s; animation-delay: 3s; }
+        .bubble-4 { left: 53%; animation-duration: 36s; animation-delay: 9s; }
+        .bubble-5 { left: 93%; animation-duration: 33s; animation-delay: 11s; }
+        .bubble-6 { left: 23%; animation-duration: 37s; animation-delay: 5s; }
 
-        .orange-slice { left: 75%; animation-duration: 35s; animation-delay: 2s; }
-        .lemon-slice { left: 15%; animation-duration: 32s; animation-delay: 10s; }
-        .strawberry-slice { left: 30%; animation-duration: 38s; animation-delay: 6s; }
-        .leaf-1 { left: 50%; animation-duration: 26s; animation-delay: 7s; }
+
+
+        .orange-slice { left: 75%; animation-duration: 55s; animation-delay: 2s; }
+        .lemon-slice { left: 15%; animation-duration: 52s; animation-delay: 10s; }
+        .strawberry-slice { left: 30%; animation-duration: 58s; animation-delay: 6s; }
+        .leaf-1 { left: 50%; animation-duration: 46s; animation-delay: 7s; }
+
+        .sparkle-1 { left: 15%; animation-duration: 10s; animation-delay: 0s; scale: 0.8; }
+        .sparkle-2 { left: 45%; animation-duration: 8s; animation-delay: 2s; scale: 1.2; }
+        .sparkle-3 { left: 75%; animation-duration: 12s; animation-delay: 4s; scale: 0.5; }
+        .sparkle-4 { left: 85%; animation-duration: 9s; animation-delay: 1s; scale: 1.0; }
+        .sparkle-5 { left: 25%; animation-duration: 11s; animation-delay: 3s; scale: 0.7; }
+        .sparkle-6 { left: 55%; animation-duration: 7s; animation-delay: 5s; scale: 1.1; }
+        .sparkle-7 { left: 35%; animation-duration: 10s; animation-delay: 2s; scale: 0.9; }
+        .sparkle-8 { left: 65%; animation-duration: 13s; animation-delay: 0s; scale: 0.6; }
+        .sparkle-9 { left: 95%; animation-duration: 8s; animation-delay: 4s; scale: 1.0; }
+        .sparkle-10 { left: 5%; animation-duration: 12s; animation-delay: 1s; scale: 0.8; }
+
+        .sparkle {
+          animation-name: sparkleFade !important;
+          animation-timing-function: linear !important;
+        }
+
+        @keyframes sparkleFade {
+          0%, 100% { opacity: 0; transform: translateY(110vh) scale(0); }
+          50% { opacity: 0.8; transform: translateY(50vh) scale(1); }
+          80% { opacity: 0.8; }
+        }
+
+
 
 
         /* Bouncing/Rotation Overrides */
@@ -242,24 +325,25 @@ const DynamicBackground = () => {
         }
 
         .parallax-waves > use {
-          animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+          animation: move-forever 45s cubic-bezier(.55,.5,.45,.5) infinite;
         }
         .parallax-waves > use:nth-child(1) {
           animation-delay: -2s;
-          animation-duration: 7s;
+          animation-duration: 12s;
         }
         .parallax-waves > use:nth-child(2) {
           animation-delay: -3s;
-          animation-duration: 10s;
+          animation-duration: 18s;
         }
         .parallax-waves > use:nth-child(3) {
           animation-delay: -4s;
-          animation-duration: 13s;
+          animation-duration: 25s;
         }
         .parallax-waves > use:nth-child(4) {
           animation-delay: -5s;
-          animation-duration: 20s;
+          animation-duration: 35s;
         }
+
 
         @keyframes move-forever {
           0% {
