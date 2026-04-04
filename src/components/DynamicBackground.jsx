@@ -354,6 +354,7 @@ const DynamicBackground = () => {
           }
         }
 
+
         /* Glassmorphism support classes */
         .glass-bg {
           background: rgba(255, 255, 255, 0.4) !important;
@@ -362,14 +363,22 @@ const DynamicBackground = () => {
           border: 1px solid rgba(255, 255, 255, 0.2) !important;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           .waves-container {
-            height: 10vh;
+            height: 55vh;
+            min-height: unset;
+            max-height: unset;
+            bottom: 0px; 
+          }
+          .waves {
+            height: 55vh; /* This stretches the wave pattern up to center */
           }
           .particle {
-            transform: scale(0.7);
+            transform: scale(0.8);
           }
         }
+
+
       `}</style>
     </div>
   );
