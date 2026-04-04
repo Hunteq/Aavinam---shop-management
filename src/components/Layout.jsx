@@ -15,6 +15,8 @@ import {
   User
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import DynamicBackground from './DynamicBackground';
+
 
 const Layout = ({ children }) => {
   const { user, logout, t, language, changeLanguage } = useAuth();
@@ -43,6 +45,8 @@ const Layout = ({ children }) => {
 
   return (
     <div className={`layout-container lang-${language?.toLowerCase() || 'english'}`}>
+      <DynamicBackground />
+
       {/* Sidebar - Desktop Only */}
       <aside className="sidebar desktop-only">
         <div className="sidebar-header">
@@ -177,14 +181,18 @@ const Layout = ({ children }) => {
         .layout-container {
           display: flex;
           min-height: 100vh;
-          background: var(--bg-main);
+          background: transparent;
         }
+
 
         /* Sidebar Styles */
         .sidebar {
           width: 200px;
-          background: white;
-          border-right: 1px solid var(--border);
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-right: 1px solid rgba(255, 255, 255, 0.3);
+
           position: fixed;
           top: 0;
           bottom: 0;
@@ -337,8 +345,11 @@ const Layout = ({ children }) => {
 
         .top-header {
           height: 64px;
-          background: white;
-          border-bottom: 1px solid var(--border);
+          background: rgba(255, 255, 255, 0.6);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -368,9 +379,11 @@ const Layout = ({ children }) => {
           left: 0;
           right: 0;
           height: 70px;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          border-top: 1px solid var(--border);
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-top: 1px solid rgba(255, 255, 255, 0.2);
+
           display: flex;
           align-items: center;
           justify-content: space-around;
