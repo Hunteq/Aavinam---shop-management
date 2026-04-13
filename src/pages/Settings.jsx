@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { storage } from '../lib/storage';
+import { persistence } from '../lib/persistence';
 import { useAuth } from '../context/AuthContext';
 import Profile from './Profile';
 import ActivityLogs from './ActivityLogs';
@@ -40,10 +41,30 @@ const Settings = () => {
   const [showFactoryResetConfirm, setShowFactoryResetConfirm] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [slotDeleteConfirm, setSlotDeleteConfirm] = useState(null);
+  const [persistentStatus, setPersistentStatus] = useState(false);
+  const [storageEstimate, setStorageEstimate] = useState(null);
 
   useEffect(() => {
+    const checkStorage = async () => {
+      const isPersistent = await persistence.isPersistent();
+      const estimate = await persistence.getStorageEstimate();
+      setPersistentStatus(isPersistent);
+      setStorageEstimate(estimate);
+    };
+    checkStorage();
     setSettings(storage.get('dsms_settings'));
   }, []);
+
+  const handleRequestPersistence = async () => {
+    const granted = await persistence.requestPersistence();
+    setPersistentStatus(granted);
+    if (granted) {
+      setMessage({ type: 'success', text: t('persistence_granted') });
+    } else {
+      setMessage({ type: 'error', text: t('persistence_denied') });
+    }
+    setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+  };
 
   const handleAddTimeSlot = () => {
     const newSlot = {
@@ -298,11 +319,50 @@ const Settings = () => {
                   <Database size={20} className="text-primary" /> {t('data_safety_cloud')}
                 </h3>
                 <div className="flex flex-col gap-4">
-                  <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 flex gap-3 text-blue-700">
-                    <ShieldCheck size={24} className="flex-shrink-0" />
-                    <p className="text-xs font-medium leading-relaxed">
-                      {t('local_browser_storage')}
-                    </p>
+                  <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 flex flex-col gap-3">
+                    <div className="flex gap-3 text-blue-700">
+                      <ShieldCheck size={24} className="flex-shrink-0" />
+                      <p className="text-xs font-medium leading-relaxed">
+                        {t('local_browser_storage')}
+                      </p>
+                    </div>
+                    
+                    {/* Storage Persistence Status */}
+                    <div className="mt-2 pt-3 border-t border-blue-100/50">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-[10px] font-bold uppercase text-blue-600/70">{t('storage_status')}</span>
+                        <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${persistentStatus ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                          {persistentStatus ? t('persistent') : t('best_effort')}
+                        </span>
+                      </div>
+                      
+                      {!persistentStatus && (
+                        <div className="mb-3">
+                          <p className="text-[10px] text-blue-600/80 mb-2 leading-tight italic">
+                            {t('persistence_desc')}
+                          </p>
+                          <button 
+                            onClick={handleRequestPersistence}
+                            className="w-full py-2 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-blue-700 transition-colors shadow-sm"
+                          >
+                            {t('request_persistence')}
+                          </button>
+                        </div>
+                      )}
+
+                      {storageEstimate && (
+                        <div className="grid grid-cols-2 gap-2 mt-2">
+                          <div className="bg-white/50 p-2 rounded-lg border border-blue-100/50">
+                            <div className="text-[8px] font-bold text-blue-400 uppercase">{t('storage_usage')}</div>
+                            <div className="text-xs font-bold text-blue-700">{persistence.formatBytes(storageEstimate.usage)}</div>
+                          </div>
+                          <div className="bg-white/50 p-2 rounded-lg border border-blue-100/50">
+                            <div className="text-[8px] font-bold text-blue-400 uppercase">{t('total_quota')}</div>
+                            <div className="text-xs font-bold text-blue-700">{persistence.formatBytes(storageEstimate.quota)}</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <button onClick={exportData} className="btn-primary w-full flex items-center justify-center gap-3 py-4">

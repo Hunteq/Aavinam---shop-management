@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { storage } from '../lib/storage';
+import { persistence } from '../lib/persistence';
 
 const AuthContext = createContext();
 
@@ -217,6 +218,16 @@ const translations = {
     gst_subtitle: 'Automatically include GST (18%) in financial reports.',
     data_safety_cloud: 'Data Safety & Cloud',
     local_browser_storage: 'Your data is stored locally in your browser.',
+    storage_safety: 'Storage Safety',
+    storage_status: 'Storage Status',
+    persistent: 'Persistent (Protected)',
+    best_effort: 'Best-effort (Risk of deletion)',
+    request_persistence: 'Enable Data Protection',
+    persistence_desc: 'Ensures the browser never automatically deletes your data even when disk space is low.',
+    storage_usage: 'Storage Usage',
+    total_quota: 'Total Quota',
+    persistence_granted: 'Data protection enabled! Your records are now safe from automatic deletion.',
+    persistence_denied: 'Could not enable data protection. This might happen if your browser settings prevent it.',
     export_full_backup: 'Export Full System Backup',
     or: 'OR',
     restore_from_backup: 'Restore From Backup',
@@ -547,6 +558,16 @@ const translations = {
     gst_subtitle: 'நிதி அறிக்கைகளில் தானாகவே ஜிஎஸ்டி (18%) சேர்க்கவும்.',
     data_safety_cloud: 'தரவு பாதுகாப்பு மற்றும் கிளவுட்',
     local_browser_storage: 'உங்கள் தரவு உங்கள் உலாவியில் உள்நாட்டில் சேமிக்கப்படுகிறது.',
+    storage_safety: 'தரவுப் பாதுகாப்பு',
+    storage_status: 'சேமிப்பக நிலை',
+    persistent: 'நிலைத்தன்மை (பாதுகாக்கப்பட்டது)',
+    best_effort: 'சாதாரண நிலை (அழிக்கப்பட வாய்ப்புள்ளது)',
+    request_persistence: 'தரவுப் பாதுகாப்பை இயக்கவும்',
+    persistence_desc: 'மெமரி குறைவாக இருந்தாலும் உலாவி தானாகவே உங்கள் தரவை அழிக்காது என்பதை உறுதிப்படுத்துகிறது.',
+    storage_usage: 'பயன்படுத்தப்பட்ட அளவு',
+    total_quota: 'மொத்த அளவு',
+    persistence_granted: 'தரவு பாதுகாப்பு வெற்றிகரமாக இயக்கப்பட்டது!',
+    persistence_denied: 'தரவு பாதுகாப்பை இயக்க முடியவில்லை.',
     export_full_backup: 'முழு கணினி காப்புப்பிரதியை ஏற்றுமதி செய்',
     or: 'அல்லது',
     restore_from_backup: 'காப்புப்பிரதியிலிருந்து மீட்டமை',
@@ -875,6 +896,16 @@ const translations = {
     gst_subtitle: 'वित्तीय रिपोर्ट में स्वचालित रूप से जीएसटी (18%) शामिल करें।',
     data_safety_cloud: 'डेटा सुरक्षा और क्लाउड',
     local_browser_storage: 'आपका डेटा आपके ब्राउज़र में स्थानीय रूप से संग्रहीत है।',
+    storage_safety: 'डेटा सुरक्षा',
+    storage_status: 'स्टोरेज की स्थिति',
+    persistent: 'स्थायी (सुरक्षित)',
+    best_effort: 'अस्थायी (हटाए जाने का जोखिम)',
+    request_persistence: 'डेटा सुरक्षा सक्षम करें',
+    persistence_desc: 'सुनिश्चित करता है कि डिस्क स्थान कम होने पर भी ब्राउज़र आपका डेटा कभी भी स्वचालित रूप से न हटाए।',
+    storage_usage: 'स्टोरेज उपयोग',
+    total_quota: 'कुल कोटा',
+    persistence_granted: 'डेटा सुरक्षा सक्षम! आपके रिकॉर्ड अब सुरक्षित हैं।',
+    persistence_denied: 'डेटा सुरक्षा सक्षम नहीं की जा सकी।',
     export_full_backup: 'पूर्ण सिस्टम बैकअप निर्यात करें',
     or: 'या',
     restore_from_backup: 'बैकअप से पुनर्स्थापित करें',
@@ -1002,6 +1033,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     storage.initialize();
+    persistence.requestPersistence().catch(console.error);
     const session = storage.get('dsms_session');
     if (session) {
       setUser(session);
